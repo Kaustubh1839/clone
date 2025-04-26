@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>John Doe - Speaker Profile | Startup Summit 2025</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Speaker Profile Specific Styles */
+        .speaker-profile {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 40px;
+            margin-bottom: 50px;
+        }
+        
+        .speaker-image-container {
+            flex: 0 0 300px;
+        }
+        
+        .speaker-image {
+            width: 100%;
+            border-radius: 10px;
+            box-shadow: var(--box-shadow);
+            transition: transform 0.5s ease;
+            overflow: hidden;
+        }
+        
+        .speaker-image:hover {
+            transform: scale(1.02);
+        }
+        
+        .speaker-image img {
+            width: 100%;
+            display: block;
+            transition: transform 0.5s ease;
+        }
+        
+        .speaker-image:hover img {
+            transform: scale(1.05);
+        }
+        
+        .speaker-info {
+            flex: 1;
+            min-width: 300px;
+        }
+        
+        .speaker-name {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 5px;
+        }
+        
+        .speaker-title {
+            font-size: 1.2rem;
+            color: var(--secondary-color);
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+        
+        .speaker-bio {
+            margin-bottom: 30px;
+            line-height: 1.8;
+        }
+        
+        .speaker-social {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .speaker-social a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background-color: var(--light-color);
+            border-radius: 50%;
+            color: var(--primary-color);
+            transition: var(--transition);
+        }
+        
+        .speaker-social a:hover {
+            background-color: var(--primary-color);
+            color: var(--text-light);
+            transform: translateY(-3px);
+        }
+        
+        .speaker-sessions {
+            margin-top: 50px;
+        }
+        
+        .session-card {
+            background-color: #ffffff;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 25px;
+            margin-bottom: 20px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border-left: 4px solid var(--secondary-color);
+        }
+        
+        .session-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .session-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .session-title {
+            font-size: 1.3rem;
+            color: var(--primary-color);
+            margin: 0;
+        }
+        
+        .session-time {
+            background-color: var(--primary-color);
+            color: #ffffff;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+        
+        .session-details {
+            margin-bottom: 15px;
+        }
+        
+        .session-location, .session-day {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+        }
+        
+        .session-location i, .session-day i {
+            color: var(--secondary-color);
+            margin-right: 10px;
+            width: 16px;
+            text-align: center;
+        }
+        
+        .session-description {
+            margin-top: 15px;
+            line-height: 1.6;
+        }
+        
+        .speaker-quote {
+            background-color: rgba(26, 35, 126, 0.05);
+            border-left: 4px solid var(--primary-color);
+            padding: 20px;
+            margin: 30px 0;
+            font-style: italic;
+            position: relative;
+        }
+        
+        .speaker-quote::before {
+            content: '\201C';
+            font-size: 4rem;
+            color: var(--primary-color);
+            opacity: 0.2;
+            position: absolute;
+            top: -10px;
+            left: 10px;
+        }
+        
+        .speaker-quote p {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .speaker-expertise {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+        
+        .expertise-tag {
+            background-color: var(--light-color);
+            color: var(--primary-color);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            transition: var(--transition);
+        }
+        
+        .expertise-tag:hover {
+            background-color: var(--primary-color);
+            color: #ffffff;
+            transform: translateY(-3px);
+        }
+        
+        .other-speakers {
+            margin-top: 60px;
+        }
+        
+        .speakers-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 30px;
+        }
+        
+        @media (max-width: 768px) {
+            .speaker-profile {
+                flex-direction: column;
+            }
+            
+            .speaker-image-container {
+                flex: 0 0 100%;
+                max-width: 300px;
+                margin: 0 auto;
+            }
+            
+            .session-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .session-time {
+                margin-top: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Section -->
+    <header id="header">
+        <div class="container">
+            <div class="logo">
+                <a href="index.html">
+                    <img src="https://via.placeholder.com/240x80?text=Summit+Logo" alt="Summit Logo">
+                </a>
+                <div class="event-details">
+                    <p>April 3-5, 2025 · Innovation Center, New City</p>
+                </div>
+            </div>
+            <nav>
+                <ul class="nav-menu">
+                    <li class="dropdown">
+                        <a href="about.html">About <i class="fas fa-chevron-down"></i></a>
+                        <div class="dropdown-content">
+                            <a href="about-event.html">About Event</a>
+                            <a href="mission.html">Our Mission</a>
+                            <a href="vision.html">Vision</a>
+                        </div>
+                    </li>
+                    <li class="dropdown">
+                        <a href="conference.html">Conference <i class="fas fa-chevron-down"></i></a>
+                        <div class="dropdown-content">
+                            <a href="agenda.html">Agenda</a>
+                            <a href="speakers.html">Speakers</a>
+                            <a href="workshops.html">Workshops</a>
+                        </div>
+                    </li>
+                    <li class="dropdown">
+                        <a href="exhibition.html">Exhibition <i class="fas fa-chevron-down"></i></a>
+                        <div class="dropdown-content">
+                            <a href="startups.html">Startups</a>
+                            <a href="innovation.html">Innovation Zone</a>
+                            <a href="showcase.html">Showcase</a>
+                        </div>
+                    </li>
+                    <li><a href="investors.html">Investors</a></li>
+                    <li class="dropdown">
+                        <a href="partnership.html">Partnership <i class="fas fa-chevron-down"></i></a>
+                        <div class="dropdown-content">
+                            <a href="sponsors.html">Sponsors</a>
+                            <a href="partners.html">Partners</a>
+                            <a href="opportunities.html">Opportunities</a>
+                        </div>
+                    </li>
+                    <li class="dropdown">
+                        <a href="programs.html">Special Programmes <i class="fas fa-chevron-down"></i></a>
+                        <div class="dropdown-content">
+                            <a href="hackathon.html">Hackathon</a>
+                            <a href="pitching.html">Pitching Competition</a>
+                            <a href="mentorship.html">Mentorship</a>
+                        </div>
+                    </li>
+                </ul>
+            </nav>
+            <div class="register-btn">
+                <a href="register.html" class="btn-primary">Register Now</a>
+            </div>
+            <div class="mobile-menu-btn">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </header>
+
+    <!-- Page Header -->
+    <section class="page-header">
+        <div class="container">
+            <div class="page-header-content">
+                <h1>Speaker Profile</h1>
+                <div class="breadcrumbs">
+                    <a href="index.html">Home</a>
+                    <span class="separator">/</span>
+                    <a href="all-speakers.html">Speakers</a>
+                    <span class="separator">/</span>
+                    <span class="current">John Doe</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Speaker Profile Section -->
+    <section class="section">
+        <div class="container">
+            <div class="speaker-profile">
+                <div class="speaker-image-container">
+                    <div class="speaker-image">
+                        <img src="https://via.placeholder.com/600x600?text=John+Doe" alt="John Doe">
+                    </div>
+                    <div class="speaker-social">
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+                
+                <div class="speaker-info">
+                    <h2 class="speaker-name">John Doe</h2>
+                    <p class="speaker-title">CEO, Tech Innovations</p>
+                    
+                    <div class="speaker-expertise">
+                        <span class="expertise-tag">Innovation</span>
+                        <span class="expertise-tag">Technology</span>
+                        <span class="expertise-tag">Leadership</span>
+                        <span class="expertise-tag">Entrepreneurship</span>
+                    </div>
+                    
+                    <div class="speaker-bio">
+                        <p>John Doe is the CEO and founder of Tech Innovations, a leading technology company specializing in artificial intelligence and machine learning solutions. With over 20 years of experience in the tech industry, John has led numerous successful startups and has been recognized as one of the most influential tech leaders of the decade.</p>
+                        
+                        <p>Prior to founding Tech Innovations, John served as the CTO of Global Tech Solutions, where he spearheaded the development of groundbreaking technologies that revolutionized the industry. His expertise in AI, blockchain, and IoT has made him a sought-after speaker and advisor for tech conferences and startups worldwide.</p>
+                        
+                        <div class="speaker-quote">
+                            <p>"Innovation is not about technology alone; it's about solving real problems and creating value for people. The most successful startups are those that understand this fundamental principle."</p>
+                        </div>
+                        
+                        <p>John holds a Ph.D. in Computer Science from MIT and has published numerous research papers on artificial intelligence and machine learning. He is also the author of the bestselling book "The Future of Innovation: How Technology is Reshaping Our World."</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="speaker-sessions">
+                <div class="section-header">
+                    <h2>Sessions by John Doe</h2>
+                    <div class="underline"></div>
+                </div>
+                
+                <div class="session-card">
+                    <div class="session-header">
+                        <h3 class="session-title">Future of Innovation</h3>
+                        <span class="session-time">10:15 - 11:30</span>
+                    </div>
+                    <div class="session-details">
+                        <div class="session-day">
+                            <i class="fas fa-calendar-alt"></i>
+                            <span>Day 1 - April 3, 2025</span>
+                        </div>
+                        <div class="session-location">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>Main Hall</span>
+                        </div>
+                    </div>
+                    <div class="session-description">
+                        <p>In this keynote session, John Doe will explore the future of innovation and how emerging technologies are reshaping industries and creating new opportunities for startups. He will discuss the latest trends in AI, blockchain, and IoT, and provide insights on how entrepreneurs can leverage these technologies to build successful businesses.</p>
+                        <p>The session will also cover practical strategies for fostering innovation within organizations and overcoming common challenges that startups face when implementing new technologies.</p>
+                    </div>
+                </div>
+                
+                <div class="session-card">
+                    <div class="session-header">
+                        <h3 class="session-title">AI for Startups: Practical Applications</h3>
+                        <span class="session-time">14:15 - 15:30</span>
+                    </div>
+                    <div class="session-details">
+                        <div class="session-day">
+                            <i class="fas fa-calendar-alt"></i>
+                            <span>Day 2 - April 4, 2025</span>
+                        </div>
+                        <div class="session-location">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>Workshop Room A</span>
+                        </div>
+                    </div>
+                    <div class="session-description">
+                        <p>This workshop will provide a hands-on approach to implementing AI solutions in startups. John will demonstrate how even small companies with limited resources can leverage artificial intelligence to improve their products, enhance customer experiences, and streamline operations.</p>
+                        <p>Participants will learn about accessible AI tools and frameworks, real-world case studies, and step-by-step implementation strategies that can be applied immediately.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="other-speakers">
+                <div class="section-header">
+                    <h2>Other Speakers You Might Be Interested In</h2>
+                    <div class="underline"></div>
+                </div>
+                
+                <div class="speakers-grid">
+                    <div class="speaker-card">
+                        <div class="speaker-image">
+                            <img src="https://via.placeholder.com/300x300?text=Jane+Smith" alt="Jane Smith">
+                        </div>
+                        <div class="speaker-info">
+                            <h3>Jane Smith</h3>
+                            <p class="speaker-title">Founder, Future Ventures</p>
+                            <p class="speaker-bio">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam in dui mauris.</p>
+                            <div class="speaker-social">
+                                <a href="#"><i class="fab fa-linkedin"></i></a>
+                                <a href="#"><i class="fab fa-twitter"></i></a>
+                            </div>
+                            <a href="speaker-jane-smith.html" class="btn-secondary">View Profile</a>
+                        </div>
+                    </div>
+                    
+                    <div class="speaker-card">
+                        <div class="speaker-image">
+                            <img src="https://via.placeholder.com/300x300?text=Robert+Johnson" alt="Robert Johnson">
+                        </div>
+                        <div class="speaker-info">
+                            <h3>Robert Johnson</h3>
+                            <p class="speaker-title">CTO, Global Innovations</p>
+                            <p class="speaker-bio">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam in dui mauris.</p>
+                            <div class="speaker-social">
+                                <a href="#"><i class="fab fa-linkedin"></i></a>
+                                <a href="#"><i class="fab fa-twitter"></i></a>
+                            </div>
+                            <a href="speaker-robert-johnson.html" class="btn-secondary">View Profile</a>
+                        </div>
+                    </div>
+                    
+                    <div class="speaker-card">
+                        <div class="speaker-image">
+                            <img src="https://via.placeholder.com/300x300?text=Emily+Chen" alt="Emily Chen">
+                        </div>
+                        <div class="speaker-info">
+                            <h3>Emily Chen</h3>
+                            <p class="speaker-title">Investor, Venture Capital</p>
+                            <p class="speaker-bio">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam in dui mauris.</p>
+                            <div class="speaker-social">
+                                <a href="#"><i class="fab fa-linkedin"></i></a>
+                                <a href="#"><i class="fab fa-twitter"></i></a>
+                            </div>
+                            <a href="speaker-emily-chen.html" class="btn-secondary">View Profile</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Call to Action -->
+    <section class="section bg-dark">
+        <div class="container">
+            <div class="cta-content">
+                <h2>Don't Miss John Doe's Sessions</h2>
+                <p>Secure your spot at the Startup Summit 2025 to attend these valuable sessions</p>
+                <a href="register.html" class="btn-primary">Register Now</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <a href="index.html">
+                        <img src="https://via.placeholder.com/180x60?text=Summit+Logo" alt="Summit Logo">
+                    </a>
+                </div>
+                <div class="footer-links">
+                    <div class="footer-column">
+                        <h3>Quick Links</h3>
+                        <ul>
+                            <li><a href="about.html">About</a></li>
+                            <li><a href="conference.html">Conference</a></li>
+                            <li><a href="exhibition.html">Exhibition</a></li>
+                            <li><a href="investors.html">Investors</a></li>
+                            <li><a href="partnership.html">Partnership</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-column">
+                        <h3>Resources</h3>
+                        <ul>
+                            <li><a href="faq.html">FAQs</a></li>
+                            <li><a href="press.html">Press</a></li>
+                            <li><a href="gallery.html">Gallery</a></li>
+                            <li><a href="contact.html">Contact Us</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-column">
+                        <h3>Connect With Us</h3>
+                        <div class="social-icons">
+                            <a href="#"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#"><i class="fab fa-twitter"></i></a>
+                            <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                            <a href="#"><i class="fab fa-instagram"></i></a>
+                        </div>
+                        <div class="contact-info">
+                            <p><i class="fas fa-envelope"></i> info@startupsummit.com</p>
+                            <p><i class="fas fa-phone"></i> +1 (123) 456-7890</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Startup Summit. All Rights Reserved.</p>
+                <div class="footer-bottom-links">
+                    <a href="privacy.html">Privacy Policy</a>
+                    <a href="terms.html">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Back to Top Button -->
+    <a href="#" id="back-to-top" class="back-to-top">
+        <i class="fas fa-arrow-up"></i>
+    </a>
+
+    <!-- Page Transition Overlay -->
+    <div class="page-transition"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>
