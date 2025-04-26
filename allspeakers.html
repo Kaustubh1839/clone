@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Speakers | Startup Summit 2025</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* All Speakers Page Specific Styles */
+        .search-filter-container {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            margin-bottom: 40px;
+        }
+        
+        .search-box {
+            display: flex;
+            margin-bottom: 20px;
+        }
+        
+        .search-input {
+            flex: 1;
+            padding: 12px 15px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius) 0 0 var(--border-radius);
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+        
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+        
+        .search-btn {
+            background-color: var(--primary-color);
+            color: #ffffff;
+            border: none;
+            padding: 0 20px;
+            border-radius: 0 var(--border-radius) var(--border-radius) 0;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .search-btn:hover {
+            background-color: var(--secondary-color);
+        }
+        
+        .filter-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .filter-option {
+            background-color: var(--light-color);
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .filter-option:hover, .filter-option.active {
+            background-color: var(--primary-color);
+            color: #ffffff;
+        }
+        
+        .speakers-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .speaker-card {
+            background-color: #ffffff;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--box-shadow);
+            transition: transform 0.5s ease, box-shadow 0.5s ease;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .speaker-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        }
+        
+        .speaker-image {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .speaker-image img {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+        
+        .speaker-card:hover .speaker-image img {
+            transform: scale(1.05);
+        }
+        
+        .speaker-image::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.7) 100%);
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            z-index: 1;
+        }
+        
+        .speaker-card:hover .speaker-image::before {
+            opacity: 1;
+        }
+        
+        .speaker-info {
+            padding: 20px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .speaker-info h3 {
+            font-size: 1.3rem;
+            margin-bottom: 5px;
+            color: var(--primary-color);
+        }
+        
+        .speaker-title {
+            font-size: 0.9rem;
+            color: var(--secondary-color);
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+        
+        .speaker-bio {
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+            flex-grow: 1;
+        }
+        
+        .speaker-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-bottom: 15px;
+        }
+        
+        .speaker-tag {
+            background-color: var(--light-color);
+            color: var(--primary-color);
+            padding: 3px 10px;
+            border-radius: 3px;
+            font-size: 0.8rem;
+        }
+        
+        .speaker-social {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .speaker-social a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 30px;
+            height: 30px;
+            background-color: var(--light-color);
+            border-radius: 50%;
+            color: var(--primary-color);
+            transition: var(--transition);
+        }
+        
+        .speaker-social a:hover {
+            background-color: var(--primary-color);
+            color: var(--text-light);
+            transform: translateY(-3px);
+        }
+        
+        .view-profile-btn {
+            text-align: center;
+        }
+        
+        .view-profile-btn .btn-secondary {
+            width: 100%;
+        }
+        
+        .featured-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background-color: var(--secondary-color);
+            color: #ffffff;
+            padding: 5px 10px;
+            border-radius: 3px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            z-index: 2;
+        }
+        
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 40px;
+        }
+        
+        .pagination-item {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #ffffff;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .pagination-item:hover, .pagination-item.active {
+            background-color: var(--primary-color);
+            color: #ffffff;
+        }
+        
+        .pagination-item.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .pagination-item.disabled:hover {
+            background-color: #ffffff;
+            color: inherit;
+        }
+        
+        @media (max-width: 768px) {
+            .search-filter-container {
+                padding: 20px;
+            }
+            
+            .speakers-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .speakers-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Section -->
+    <header id="header">
+        <div class="container">
+            <div class="logo">
+                <a href="index.html">
+                    <img src="https://via.placeholder.com/240x80?text=Summit+Logo" alt="Summit Logo">
+                </a>
+                <div class="event-details">
+                    <p>April 3-5, 2025 · Innovation Center, New City</p>
+                </div>
+            </div>
+            <nav>
+                <ul class="nav-menu">
+                    <li class="dropdown">
+                        <a href="about.html">About <i class="fas fa-chevron-down"></i></a>
+                        <div class="dropdown-content">
+                            <a href="about-event.html">About Event</a>
+                            <a href="mission.html">Our Mission</a>
+                            <a href="vision.html">Vision</a>
+                        </div>
+                    </li>
+                    <li class="dropdown">
+                        <a href="conference.html">Conference <i class="fas fa-chevron-down"></i></a>
+                        <div class="dropdown-content">
+                            <a href="agenda.html">Agenda</a>
+                            <a href="speakers.html">Speakers</a>
+                            <a href="workshops.html">Workshops</a>
+                        </div>
+                    </li>
+                    <li class="dropdown">
+                        <a href="exhibition.html">Exhibition <i class="fas fa-chevron-down"></i></a>
+                        <div class="dropdown-content">
+                            <a href="startups.html">Startups</a>
+                            <a href="innovation.html">Innovation Zone</a>
+                            <a href="showcase.html">Showcase</a>
+                        </div>
+                    </li>
+                    <li><a href="investors.html">Investors</a></li>
+                    <li class="dropdown">
+                        <a href="partnership.html">Partnership <i class="fas fa-chevron-down"></i></a>
+                        <div class="dropdown-content">
+                            <a href="sponsors.html">Sponsors</a>
+                            <a href="partners.html">Partners</a>
+                            <a href="opportunities.html">Opportunities</a>
+                        </div>
+                    </li>
+                    <li class="dropdown">
+                        <a href="programs.html">Special Programmes <i class="fas fa-chevron-down"></i></a>
+                        <div class="dropdown-content">
+                            <a href="hackathon.html">Hackathon</a>
+                            <a href="pitching.html">Pitching Competition</a>
+                            <a href="mentorship.html">Mentorship</a>
+                        </div>
+                    </li>
+                </ul>
+            </nav>
+            <div class="register-btn">
+                <a href="register.html" class="btn-primary">Register Now</a>
+            </div>
+            <div class="mobile-menu-btn">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </header>
+
+    <!-- Page Header -->
+    <section class="page-header">
+        <div class="container">
+            <div class="page-header-content">
+                <h1>All Speakers</h1>
+                <div class="breadcrumbs">
+                    <a href="index.html">Home</a>
+                    <span class="separator">/</span>
+                    <span class="current">Speakers</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- All Speakers Section -->
+    <section class="section">
+        <div class="container">
+            <div class="section-header">
+                <h2>Meet Our Speakers</h2>
+                <div class="underline"></div>
+                <p>Learn from industry leaders, innovators, and experts at Startup Summit 2025</p>
+            </div>
+            
+            <div class="search-filter-container">
+                <div class="search-box">
+                    <input type="text" class="search-input" placeholder="Search speakers by name, company, or topic..." id="speaker-search">
+                    <button class="search-btn"><i class="fas fa-search"></i></button>
+                </div>
+                
+                <div class="filter-options">
+                    <div class="filter-option active" data-filter="all">All Categories</div>
+                    <div class="filter-option" data-filter="technology">Technology</div>
+                    <div class="filter-option" data-filter="business">Business</div>
+                    <div class="filter-option" data-filter="investment">Investment</div>
+                    <div class="filter-option" data-filter="marketing">Marketing</div>
+                    <div class="filter-option" data-filter="leadership">Leadership</div>
+                </div>
+            </div>
+            
+            <div class="speakers-grid">
+                <!-- Speaker 1 -->
+                <div class="speaker-card" data-category="technology leadership">
+                    <div class="speaker-image">
+                        <img src="https://via.placeholder.com/600x600?text=John+Doe" alt="John Doe">
+                        <div class="featured-badge">Keynote</div>
+                    </div>
+                    <div class="speaker-info">
+                        <h3>John Doe</h3>
+                        <p class="speaker-title">CEO, Tech Innovations</p>
+                        <div class="speaker-tags">
+                            <span class="speaker-tag">Technology</span>
+                            <span class="speaker-tag">Leadership</span>
+                        </div>
+                        <p class="speaker-bio">John Doe is the CEO and founder of Tech Innovations, a leading technology company specializing in artificial intelligence and machine learning solutions.</p>
+                        <div class="speaker-social">
+                            <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                            <a href="#"><i class="fab fa-twitter"></i></a>
+                            <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        </div>
+                        <div class="view-profile-btn">
+                            <a href="speaker-john-doe.html" class="btn-secondary">View Profile</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Speaker 2 -->
+                <div class="speaker-card" data-category="business investment">
+                    <div class="speaker-image">
+                        <img src="https://via.placeholder.com/600x600?text=Jane+Smith" alt="Jane Smith">
+                        <div class="featured-badge">Keynote</div>
+                    </div>
+                    <div class="speaker-info">
+                        <h3>Jane Smith</h3>
+                        <p class="speaker-title">Founder, Future Ventures</p>
+                        <div class="speaker-tags">
+                            <span class="speaker-tag">Investment</span>
+                            <span class="speaker-tag">Business</span>
+                        </div>
+                        <p class="speaker-bio">Jane Smith is the founder and managing partner of Future Ventures, a venture capital firm focused on early-stage technology startups.</p>
+                        <div class="speaker-social">
+                            <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                            <a href="#"><i class="fab fa-twitter"></i></a>
+                            <a href="#"><i class="fab fa-instagram"></i></a>
+                        </div>
+                        <div class="view-profile-btn">
+                            <a href="speaker-jane-smith.html" class="btn-secondary">View Profile</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Speaker 3 -->
+                <div class="speaker-card" data-category="technology">
+                    <div class="speaker-image">
+                        <img src="https://via.placeholder.com/600x600?text=Robert+Johnson" alt="Robert Johnson">
+                        <div class="featured-badge">Keynote</div>
+                    </div>
+                    <div class="speaker-info">
+                        <h3>Robert Johnson</h3>
+                        <p class="speaker-title">CTO, Global Innovations</p>
+                        <div class="speaker-tags">
+                            <span class="speaker-tag">Technology</span>
+                            <span class="speaker-tag">Innovation</span>
+                        </div>
+                        <p class="speaker-bio">Robert Johnson is the Chief Technology Officer at Global Innovations, where he leads the development of cutting-edge technologies.</p>
+                        <div class="speaker-social">
+                            <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                            <a href="#"><i class="fab fa-twitter"></i></a>
+                            <a href="#"><i class="fab fa-github"></i></a>
+                        </div>
+                        <div class="view-profile-btn">
+                            <a href="speaker-robert-johnson.html" class="btn-secondary">View Profile</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Speaker 4 -->
+                <div class="speaker-card" data-category="investment business">
+                    <div class="speaker-image">
+                        <img src="https://via.placeholder.com/600x600?text=Emily+Chen" alt="Emily Chen">
+                        <div class="featured-badge">Keynote</div>  alt="Emily Chen">
+                        <div class="featured-badge">Keynote</div>
+                    </div>
+                    <div class="speaker-info">
+                        <h3>Emily Chen</h3>
+                        <p class="speaker-title">Investor, Venture Capital</p>
+                        <div class="speaker-tags">
+                            <span class="speaker-tag">Investment</span>
+                            <span class="speaker-tag">Finance</span>
+                        </div>
+                        <p class="speaker-bio">Emily Chen is a seasoned investor with over 15 years of experience in venture capital, focusing on fintech and healthcare startups.</p>
+                        <div class="speaker-social">
+                            <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                            <a href="#"><i class="fab fa-twitter"></i></a>
+                            <a href="#"><i class="fab fa-medium"></i></a>
+                        </div>
+                        <div class="view-profile-btn">
+                            <a href="speaker-emily-chen.html" class="btn-secondary">View Profile</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Speaker 5 -->
+                <div class="speaker-card" data-category="marketing">
+                    <div class="speaker-image">
+                        <img src="https://via.placeholder.com/600x600?text=Michael+Brown" alt="Michael Brown">
+                    </div>
+                    <div class="speaker-info">
+                        <h3>Michael Brown</h3>
+                        <p class="speaker-title">CMO, Digital Strategies</p>
+                        <div class="speaker-tags">
+                            <span class="speaker-tag">Marketing</span>
+                            <span class="speaker-tag">Digital</span>
+                        </div>
+                        <p class="speaker-bio">Michael Brown is a marketing expert specializing in digital transformation and growth marketing strategies for startups.</p>
+                        <div class="speaker-social">
+                            <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                            <a href="#"><i class="fab fa-twitter"></i></a>
+                        </div>
+                        <div class="view-profile-btn">
+                            <a href="speaker-michael-brown.html" class="btn-secondary">View Profile</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Speaker 6 -->
+                <div class="speaker-card" data-category="leadership business">
+                    <div class="speaker-image">
+                        <img src="https://via.placeholder.com/600x600?text=Sarah+Williams" alt="Sarah Williams">
+                    </div>
+                    <div class="speaker-info">
+                        <h3>Sarah Williams</h3>
+                        <p class="speaker-title">CEO, Startup Accelerator</p>
+                        <div class="speaker-tags">
+                            <span class="speaker-tag">Leadership</span>
+                            <span class="speaker-tag">Business</span>
+                        </div>
+                        <p class="speaker-bio">Sarah Williams leads one of the most successful startup accelerators, having helped over 200 companies secure funding and scale globally.</p>
+                        <div class="speaker-social">
+                            <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                            <a href="#"><i class="fab fa-twitter"></i></a>
+                        </div>
+                        <div class="view-profile-btn">
+                            <a href="speaker-sarah-williams.html" class="btn-secondary">View Profile</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Speaker 7 -->
+                <div class="speaker-card" data-category="technology">
+                    <div class="speaker-image">
+                        <img src="https://via.placeholder.com/600x600?text=David+Lee" alt="David Lee">
+                    </div>
+                    <div class="speaker-info">
+                        <h3>David Lee</h3>
+                        <p class="speaker-title">Founder, Tech Solutions</p>
+                        <div class="speaker-tags">
+                            <span class="speaker-tag">Technology</span>
+                            <span class="speaker-tag">Blockchain</span>
+                        </div>
+                        <p class="speaker-bio">David Lee is a blockchain expert and serial entrepreneur who has founded three successful tech startups in the past decade.</p>
+                        <div class="speaker-social">
+                            <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                            <a href="#"><i class="fab fa-twitter"></i></a>
+                            <a href="#"><i class="fab fa-github"></i></a>
+                        </div>
+                        <div class="view-profile-btn">
+                            <a href="speaker-david-lee.html" class="btn-secondary">View Profile</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Speaker 8 -->
+                <div class="speaker-card" data-category="marketing">
+                    <div class="speaker-image">
+                        <img src="https://via.placeholder.com/600x600?text=Lisa+Garcia" alt="Lisa Garcia">
+                    </div>
+                    <div class="speaker-info">
+                        <h3>Lisa Garcia</h3>
+                        <p class="speaker-title">Growth Strategist</p>
+                        <div class="speaker-tags">
+                            <span class="speaker-tag">Marketing</span>
+                            <span class="speaker-tag">Growth</span>
+                        </div>
+                        <p class="speaker-bio">Lisa Garcia is a growth marketing expert who has helped numerous startups achieve exponential user acquisition and retention.</p>
+                        <div class="speaker-social">
+                            <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                            <a href="#"><i class="fab fa-twitter"></i></a>
+                        </div>
+                        <div class="view-profile-btn">
+                            <a href="speaker-lisa-garcia.html" class="btn-secondary">View Profile</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Speaker 9 -->
+                <div class="speaker-card" data-category="investment">
+                    <div class="speaker-image">
+                        <img src="https://via.placeholder.com/600x600?text=James+Wilson" alt="James Wilson">
+                    </div>
+                    <div class="speaker-info">
+                        <h3>James Wilson</h3>
+                        <p class="speaker-title">Angel Investor</p>
+                        <div class="speaker-tags">
+                            <span class="speaker-tag">Investment</span>
+                            <span class="speaker-tag">Startups</span>
+                        </div>
+                        <p class="speaker-bio">James Wilson is an angel investor who has invested in over 50 early-stage startups across various industries.</p>
+                        <div class="speaker-social">
+                            <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                            <a href="#"><i class="fab fa-twitter"></i></a>
+                        </div>
+                        <div class="view-profile-btn">
+                            <a href="speaker-james-wilson.html" class="btn-secondary">View Profile</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Speaker 10 -->
+                <div class="speaker-card" data-category="leadership technology">
+                    <div class="speaker-image">
+                        <img src="https://via.placeholder.com/600x600?text=Amanda+Taylor" alt="Amanda Taylor">
+                    </div>
+                    <div class="speaker-info">
+                        <h3>Amanda Taylor</h3>
+                        <p class="speaker-title">CIO, Enterprise Solutions</p>
+                        <div class="speaker-tags">
+                            <span class="speaker-tag">Technology</span>
+                            <span class="speaker-tag">Leadership</span>
+                        </div>
+                        <p class="speaker-bio">Amanda Taylor is a technology leader with expertise in digital transformation and enterprise technology solutions.</p>
+                        <div class="speaker-social">
+                            <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                            <a href="#"><i class="fab fa-twitter"></i></a>
+                        </div>
+                        <div class="view-profile-btn">
+                            <a href="speaker-amanda-taylor.html" class="btn-secondary">View Profile</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Speaker 11 -->
+                <div class="speaker-card" data-category="business">
+                    <div class="speaker-image">
+                        <img src="https://via.placeholder.com/600x600?text=Thomas+Clark" alt="Thomas Clark">
+                    </div>
+                    <div class="speaker-info">
+                        <h3>Thomas Clark</h3>
+                        <p class="speaker-title">Business Strategist</p>
+                        <div class="speaker-tags">
+                            <span class="speaker-tag">Business</span>
+                            <span class="speaker-tag">Strategy</span>
+                        </div>
+                        <p class="speaker-bio">Thomas Clark is a business strategist who helps startups develop sustainable business models and go-to-market strategies.</p>
+                        <div class="speaker-social">
+                            <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                            <a href="#"><i class="fab fa-twitter"></i></a>
+                        </div>
+                        <div class="view-profile-btn">
+                            <a href="speaker-thomas-clark.html" class="btn-secondary">View Profile</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Speaker 12 -->
+                <div class="speaker-card" data-category="technology">
+                    <div class="speaker-image">
+                        <img src="https://via.placeholder.com/600x600?text=Rachel+Kim" alt="Rachel Kim">
+                    </div>
+                    <div class="speaker-info">
+                        <h3>Rachel Kim</h3>
+                        <p class="speaker-title">AI Researcher</p>
+                        <div class="speaker-tags">
+                            <span class="speaker-tag">Technology</span>
+                            <span class="speaker-tag">AI</span>
+                        </div>
+                        <p class="speaker-bio">Rachel Kim is a leading AI researcher and thought leader in the field of machine learning and artificial intelligence.</p>
+                        <div class="speaker-social">
+                            <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                            <a href="#"><i class="fab fa-twitter"></i></a>
+                            <a href="#"><i class="fab fa-github"></i></a>
+                        </div>
+                        <div class="view-profile-btn">
+                            <a href="speaker-rachel-kim.html" class="btn-secondary">View Profile</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="pagination">
+                <div class="pagination-item"><i class="fas fa-chevron-left"></i></div>
+                <div class="pagination-item active">1</div>
+                <div class="pagination-item">2</div>
+                <div class="pagination-item">3</div>
+                <div class="pagination-item"><i class="fas fa-chevron-right"></i></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Call to Action -->
+    <section class="section bg-dark">
+        <div class="container">
+            <div class="cta-content">
+                <h2>Learn from Industry Leaders</h2>
+                <p>Register now to attend sessions by these amazing speakers at Startup Summit 2025</p>
+                <a href="register.html" class="btn-primary">Register Now</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <a href="index.html">
+                        <img src="https://via.placeholder.com/180x60?text=Summit+Logo" alt="Summit Logo">
+                    </a>
+                </div>
+                <div class="footer-links">
+                    <div class="footer-column">
+                        <h3>Quick Links</h3>
+                        <ul>
+                            <li><a href="about.html">About</a></li>
+                            <li><a href="conference.html">Conference</a></li>
+                            <li><a href="exhibition.html">Exhibition</a></li>
+                            <li><a href="investors.html">Investors</a></li>
+                            <li><a href="partnership.html">Partnership</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-column">
+                        <h3>Resources</h3>
+                        <ul>
+                            <li><a href="faq.html">FAQs</a></li>
+                            <li><a href="press.html">Press</a></li>
+                            <li><a href="gallery.html">Gallery</a></li>
+                            <li><a href="contact.html">Contact Us</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-column">
+                        <h3>Connect With Us</h3>
+                        <div class="social-icons">
+                            <a href="#"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#"><i class="fab fa-twitter"></i></a>
+                            <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                            <a href="#"><i class="fab fa-instagram"></i></a>
+                        </div>
+                        <div class="contact-info">
+                            <p><i class="fas fa-envelope"></i> info@startupsummit.com</p>
+                            <p><i class="fas fa-phone"></i> +1 (123) 456-7890</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Startup Summit. All Rights Reserved.</p>
+                <div class="footer-bottom-links">
+                    <a href="privacy.html">Privacy Policy</a>
+                    <a href="terms.html">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Back to Top Button -->
+    <a href="#" id="back-to-top" class="back-to-top">
+        <i class="fas fa-arrow-up"></i>
+    </a>
+
+    <!-- Page Transition Overlay -->
+    <div class="page-transition"></div>
+
+    <script src="script.js"></script>
+    <script>
+        // All Speakers page specific JavaScript
+        document.addEventListener('DOMContentLoaded', function() {
+            // Filter functionality
+            const filterOptions = document.querySelectorAll('.filter-option');
+            const speakerCards = document.querySelectorAll('.speaker-card');
+            const searchInput = document.getElementById('speaker-search');
+            
+            // Filter by category
+            filterOptions.forEach(option => {
+                option.addEventListener('click', () => {
+                    const filter = option.getAttribute('data-filter');
+                    
+                    // Remove active class from all options
+                    filterOptions.forEach(o => o.classList.remove('active'));
+                    
+                    // Add active class to selected option
+                    option.classList.add('active');
+                    
+                    // Filter speaker cards
+                    speakerCards.forEach(card => {
+                        if (filter === 'all' || card.getAttribute('data-category').includes(filter)) {
+                            card.style.display = 'block';
+                        } else {
+                            card.style.display = 'none';
+                        }
+                    });
+                });
+            });
+            
+            // Search functionality
+            searchInput.addEventListener('keyup', () => {
+                const searchTerm = searchInput.value.toLowerCase();
+                
+                speakerCards.forEach(card => {
+                    const speakerName = card.querySelector('h3').textContent.toLowerCase();
+                    const speakerTitle = card.querySelector('.speaker-title').textContent.toLowerCase();
+                    const speakerBio = card.querySelector('.speaker-bio').textContent.toLowerCase();
+                    const speakerTags = card.querySelector('.speaker-tags').textContent.toLowerCase();
+                    
+                    if (speakerName.includes(searchTerm) || 
+                        speakerTitle.includes(searchTerm) || 
+                        speakerBio.includes(searchTerm) || 
+                        speakerTags.includes(searchTerm)) {
+                        card.style.display = 'block';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            });
+            
+            // Pagination functionality
+            const paginationItems = document.querySelectorAll('.pagination-item');
+            
+            paginationItems.forEach(item => {
+                item.addEventListener('click', () => {
+                    if (!item.classList.contains('active') && !item.classList.contains('disabled')) {
+                        // Remove active class from all pagination items
+                        paginationItems.forEach(i => i.classList.remove('active'));
+                        
+                        // Add active class to clicked pagination item
+                        item.classList.add('active');
+                        
+                        // In a real implementation, this would load the next page of speakers
+                        // For this demo, we'll just scroll to the top of the speakers section
+                        document.querySelector('.speakers-grid').scrollIntoView({ behavior: 'smooth' });
+                    }
+                });
+            });
+            
+            // Animate speaker cards on scroll
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach((entry, index) => {
+                    if (entry.isIntersecting) {
+                        setTimeout(() => {
+                            entry.target.style.opacity = '1';
+                            entry.target.style.transform = 'translateY(0)';
+                        }, index * 100);
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, {
+                threshold: 0.1
+            });
+            
+            speakerCards.forEach(card => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                observer.observe(card);
+            });
+        });
+    </script>
+</body>
+</html>
