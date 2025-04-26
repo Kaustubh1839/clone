@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Full Schedule - Startup Summit 2025</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Page-specific styles */
+        .schedule-container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        
+        .day-tabs {
+            display: flex;
+            margin-bottom: 30px;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+        }
+        
+        .day-tab {
+            flex: 1;
+            padding: 15px;
+            text-align: center;
+            background-color: var(--light-color);
+            cursor: pointer;
+            font-weight: 600;
+            transition: var(--transition);
+            border-bottom: 3px solid transparent;
+        }
+        
+        .day-tab.active {
+            background-color: var(--primary-color);
+            color: #ffffff;
+            border-bottom: 3px solid var(--secondary-color);
+        }
+        
+        .day-tab:hover:not(.active) {
+            background-color: rgba(26, 35, 126, 0.1);
+        }
+        
+        .day-content {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .day-content.active {
+            display: block;
+        }
+        
+        .time-slot {
+            margin-bottom: 30px;
+            border-left: 4px solid var(--primary-color);
+            padding-left: 20px;
+            position: relative;
+        }
+        
+        .time-slot::before {
+            content: '';
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            background-color: var(--primary-color);
+            border-radius: 50%;
+            left: -10px;
+            top: 15px;
+        }
+        
+        .time-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .time-header h3 {
+            font-size: 1.2rem;
+            margin: 0;
+            color: var(--primary-color);
+            margin-right: 15px;
+        }
+        
+        .time-header .time-badge {
+            background-color: var(--secondary-color);
+            color: #ffffff;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        
+        .session-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        
+        .session-card {
+            background-color: #ffffff;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--box-shadow);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .session-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .session-card.featured {
+            border-top: 4px solid var(--secondary-color);
+        }
+        
+        .session-content {
+            padding: 20px;
+        }
+        
+        .session-title {
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+            color: var(--primary-color);
+        }
+        
+        .session-info {
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .session-info i {
+            color: var(--secondary-color);
+            margin-right: 8px;
+            width: 16px;
+            text-align: center;
+        }
+        
+        .session-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-top: 15px;
+        }
+        
+        .session-tag {
+            background-color: rgba(26, 35, 126, 0.1);
+            color: var(--primary-color);
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-size: 0.8rem;
+        }
+        
+        .download-btn {
+            text-align: center;
+            margin-top: 40px;
+        }
+        
+        .print-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background-color: var(--primary-color);
+            color: #ffffff;
+            padding: 12px 25px;
+            border-radius: var(--border-radius);
+            font-weight: 600;
+            transition: var(--transition);
+            border: none;
+            cursor: pointer;
+        }
+        
+        .print-btn:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-3px);
+        }
+        
+        .filter-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+        
+        .filter-option {
+            background-color: #ffffff;
+            border: 1px solid var(--border-color);
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .filter-option:hover, .filter-option.active {
+            background-color: var(--primary-color);
+            color: #ffffff;
+            border-color: var(--primary-color);
+        }
+        
+        @media (max-width: 768px) {
+            .session-cards {
+                grid-template-columns: 1fr;
+            }
+            
+            .day-tabs {
+                flex-direction: column;
+            }
+            
+            .day-tab {
+                border-bottom: none;
+                border-left: 3px solid transparent;
+            }
+            
+            .day-tab.active {
+                border-bottom: none;
+                border-left: 3px solid var(--secondary-color);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Section -->
+    <header id="header">
+        <div class="container">
+            <div class="logo">
+                <a href="index.html">
+                    <img src="https://via.placeholder.com/240x80?text=Summit+Logo" alt="Summit Logo">
+                </a>
+                <div class="event-details">
+                    <p>April 3-5, 2025 · Innovation Center, New City</p>
+                </div>
+            </div>
+            <nav>
+                <ul class="nav-menu">
+                    <li class="dropdown">
+                        <a href="about.html">About <i class="fas fa-chevron-down"></i></a>
+                        <div class="dropdown-content">
+                            <a href="about-event.html">About Event</a>
+                            <a href="mission.html">Our Mission</a>
+                            <a href="vision.html">Vision</a>
+                        </div>
+                    </li>
+                    <li class="dropdown">
+                        <a href="conference.html">Conference <i class="fas fa-chevron-down"></i></a>
+                        <div class="dropdown-content">
+                            <a href="agenda.html">Agenda</a>
+                            <a href="speakers.html">Speakers</a>
+                            <a href="workshops.html">Workshops</a>
+                        </div>
+                    </li>
+                    <li class="dropdown">
+                        <a href="exhibition.html">Exhibition <i class="fas fa-chevron-down"></i></a>
+                        <div class="dropdown-content">
+                            <a href="startups.html">Startups</a>
+                            <a href="innovation.html">Innovation Zone</a>
+                            <a href="showcase.html">Showcase</a>
+                        </div>
+                    </li>
+                    <li><a href="investors.html">Investors</a></li>
+                    <li class="dropdown">
+                        <a href="partnership.html">Partnership <i class="fas fa-chevron-down"></i></a>
+                        <div class="dropdown-content">
+                            <a href="sponsors.html">Sponsors</a>
+                            <a href="partners.html">Partners</a>
+                            <a href="opportunities.html">Opportunities</a>
+                        </div>
+                    </li>
+                    <li class="dropdown">
+                        <a href="programs.html">Special Programmes <i class="fas fa-chevron-down"></i></a>
+                        <div class="dropdown-content">
+                            <a href="hackathon.html">Hackathon</a>
+                            <a href="pitching.html">Pitching Competition</a>
+                            <a href="mentorship.html">Mentorship</a>
+                        </div>
+                    </li>
+                </ul>
+            </nav>
+            <div class="register-btn">
+                <a href="register.html" class="btn-primary">Register Now</a>
+            </div>
+            <div class="mobile-menu-btn">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </header>
+
+    <!-- Page Header -->
+    <section class="page-header">
+        <div class="container">
+            <div class="page-header-content">
+                <h1>Full Schedule</h1>
+                <div class="breadcrumbs">
+                    <a href="index.html">Home</a>
+                    <span class="separator">/</span>
+                    <span class="current">Full Schedule</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Schedule Section -->
+    <section class="section">
+        <div class="container">
+            <div class="section-header">
+                <h2>Event Schedule</h2>
+                <div class="underline"></div>
+                <p>Plan your Startup Summit experience with our comprehensive schedule</p>
+            </div>
+            
+            <div class="filter-options">
+                <div class="filter-option active" data-filter="all">All Sessions</div>
+                <div class="filter-option" data-filter="keynote">Keynotes</div>
+                <div class="filter-option" data-filter="panel">Panel Discussions</div>
+                <div class="filter-option" data-filter="workshop">Workshops</div>
+                <div class="filter-option" data-filter="networking">Networking</div>
+            </div>
+            
+            <div class="schedule-container">
+                <div class="day-tabs">
+                    <div class="day-tab active" data-day="day1">Day 1 - April 3</div>
+                    <div class="day-tab" data-day="day2">Day 2 - April 4</div>
+                    <div class="day-tab" data-day="day3">Day 3 - April 5</div>
+                </div>
+                
+                <div class="day-content active" id="day1">
+                    <div class="time-slot">
+                        <div class="time-header">
+                            <h3>08:00 - 09:00</h3>
+                            <span class="time-badge">Networking</span>
+                        </div>
+                        <div class="session-cards">
+                            <div class="session-card" data-type="networking">
+                                <div class="session-content">
+                                    <h4 class="session-title">Registration & Breakfast</h4>
+                                    <div class="session-info">
+                                        <i class="fas fa-map-marker-alt"></i>
+                                        <span>Main Lobby</span>
+                                    </div>
+                                    <div class="session-tags">
+                                        <span class="session-tag">Networking</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="time-slot">
+                        <div class="time-header">
+                            <h3>09:00 - 10:00</h3>
+                            <span class="time-badge">Opening</span>
+                        </div>
+                        <div class="session-cards">
+                            <div class="session-card featured" data-type="keynote">
+                                <div class="session-content">
+                                    <h4 class="session-title">Opening Ceremony</h4>
+                                    <div class="session-info">
+                                        <i class="fas fa-map-marker-alt"></i>
+                                        <span>Main Hall</span>
+                                    </div>
+                                    <div class="session-info">
+                                        <i class="fas fa-user"></i>
+                                        <span>Event Organizers</span>
+                                    </div>
+                                    <div class="session-tags">
+                                        <span class="session-tag">Keynote</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="time-slot">
+                        <div class="time-header">
+                            <h3>10:15 - 11:30</h3>
+                            <span class="time-badge">Keynote</span>
+                        </div>
+                        <div class="session-cards">
+                            <div class="session-card featured" data-type="keynote">
+                                <div class="session-content">
+                                    <h4 class="session-title">Future of Innovation</h4>
+                                    <div class="session-info">
+                                        <i class="fas fa-map-marker-alt"></i>
+                                        <span>Main Hall</span>
+                                    </div>
+                                    <div class="session-info">
+                                        <i class="fas fa-user"></i>
+                                        <span>John Doe, CEO Tech Innovations</span>
+                                    </div>
+                                    <div class="session-tags">
+                                        <span class="session-tag">Keynote</span>
+                                        <span class="session-tag">Innovation</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="time-slot">
+                        <div class="time-header">
+                            <h3>11:45 - 13:00</h3>
+                            <span class="time-badge">Panel</span>
+                        </div>
+                        <div class="session-cards">
+                            <div class="session-card" data-type="panel">
+                                <div class="session-content">
+                                    <h4 class="session-title">Funding Landscape</h4>
+                                    <div class="session-info">
+                                        <i class="fas fa-map-marker-alt"></i>
+                                        <span>Conference Room A</span>
+                                    </div>
+                                    <div class="session-info">
+                                        <i class="fas fa-users"></i>
+                                        <span>Panel of Investors</span>
+                                    </div>
+                                    <div class="session-tags">
+                                        <span class="session-tag">Panel</span>
+                                        <span class="session-tag">Funding</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="time-slot">
+                        <div class="time-header">
+                            <h3>13:00 - 14:00</h3>
+                            <span class="time-badge">Break</span>
+                        </div>
+                        <div class="session-cards">
+                            <div class="session-card" data-type="networking">
+                                <div class="session-content">
+                                    <h4 class="session-title">Networking Lunch</h4>
+                                    <div class="session-info">
+                                        <i class="fas fa-map-marker-alt"></i>
+                                        <span>Dining Hall</span>
+                                    </div>
+                                    <div class="session-tags">
+                                        <span class="session-tag">Networking</span>
+                                        <span class="session-tag">Lunch</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="time-slot">
+                        <div class="time-header">
+                            <h3>14:15 - 15:30</h3>
+                            <span class="time-badge">Workshops</span>
+                        </div>
+                        <div class="session-cards">
+                            <div class="session-card" data-type="workshop">
+                                <div class="session-content">
+                                    <h4 class="session-title">Startup Funding 101</h4>
+                                    <div class="session-info">
+                                        <i class="fas fa-map-marker-alt"></i>
+                                        <span>Workshop Room A</span>
+                                    </div>
+                                    <div class="session-info">
+                                        <i class="fas fa-user"></i>
+                                        <span>Emily Chen, Venture Capital</span>
+                                    </div>
+                                    <div class="session-tags">
+                                        <span class="session-tag">Workshop</span>
+                                        <span class="session-tag">Funding</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="session-card" data-type="workshop">
+                                <div class="session-content">
+                                    <h4 class="session-title">Product Market Fit</h4>
+                                    <div class="session-info">
+                                        <i class="fas fa-map-marker-alt"></i>
+                                        <span>Workshop Room B</span>
+                                    </div>
+                                    <div class="session-info">
+                                        <i class="fas fa-user"></i>
+                                        <span>Robert Johnson, CTO Global Innovations</span>
+                                    </div>
+                                    <div class="session-tags">
+                                        <span class="session-tag">Workshop</span>
+                                        <span class="session-tag">Product</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="day-content" id="day2">
+                    <div class="time-slot">
+                        <div class="time-header">
+                            <h3>08:30 - 09:00</h3>
+                            <span class="time-badge">Networking</span>
+                        </div>
+                        <div class="session-cards">
+                            <div class="session-card" data-type="networking">
+                                <div class="session-content">
+                                    <h4 class="session-title">Morning Coffee</h4>
+                                    <div class="session-info">
+                                        <i class="fas fa-map-marker-alt"></i>
+                                        <span>Main Lobby</span>
+                                    </div>
+                                    <div class="session-tags">
+                                        <span class="session-tag">Networking</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="time-slot">
+                        <div class="time-header">
+                            <h3>09:00 - 10:00</h3>
+                            <span class="time-badge">Showcase</span>
+                        </div>
+                        <div class="session-cards">
+                            <div class="session-card" data-type="keynote">
+                                <div class="session-content">
+                                    <h4 class="session-title">Startup Showcase</h4>
+                                    <div class="session-info">
+                                        <i class="fas fa-map-marker-alt"></i>
+                                        <span>Exhibition Hall</span>
+                                    </div>
+                                    <div class="session-tags">
+                                        <span class="session-tag">Showcase</span>
+                                        <span class="session-tag">Startups</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="time-slot">
+                        <div class="time-header">
+                            <h3>10:15 - 11:30</h3>
+                            <span class="time-badge">Workshop</span>
+                        </div>
+                        <div class="session-cards">
+                            <div class="session-card" data-type="workshop">
+                                <div class="session-content">
+                                    <h4 class="session-title">Growth Strategies</h4>
+                                    <div class="session-info">
+                                        <i class="fas fa-map-marker-alt"></i>
+                                        <span>Workshop Room B</span>
+                                    </div>
+                                    <div class="session-info">
+                                        <i class="fas fa-user"></i>
+                                        <span>Jane Smith, Founder Future Ventures</span>
+                                    </div>
+                                    <div class="session-tags">
+                                        <span class="session-tag">Workshop</span>
+                                        <span class="session-tag">Growth</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="time-slot">
+                        <div class="time-header">
+                            <h3>13:00 - 14:30</h3>
+                            <span class="time-badge">Networking</span>
+                        </div>
+                        <div class="session-cards">
+                            <div class="session-card" data-type="networking">
+                                <div class="session-content">
+                                    <h4 class="session-title">Networking Lunch</h4>
+                                    <div class="session-info">
+                                        <i class="fas fa-map-marker-alt"></i>
+                                        <span>Dining Hall</span>
+                                    </div>
+                                    <div class="session-tags">
+                                        <span class="session-tag">Networking</span>
+                                        <span class="session-tag">Lunch</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="day-content" id="day3">
+                    <div class="time-slot">
+                        <div class="time-header">
+                            <h3>09:00 - 10:00</h3>
+                            <span class="time-badge">Matchmaking</span>
+                        </div>
+                        <div class="session-cards">
+                            <div class="session-card" data-type="networking">
+                                <div class="session-content">
+                                    <h4 class="session-title">Investor Matchmaking</h4>
+                                    <div class="session-info">
+                                        <i class="fas fa-map-marker-alt"></i>
+                                        <span>Meeting Rooms</span>
+                                    </div>
+                                    <div class="session-tags">
+                                        <span class="session-tag">Networking</span>
+                                        <span class="session-tag">Investment</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="time-slot">
+                        <div class="time-header">
+                            <h3>11:00 - 12:30</h3>
+                            <span class="time-badge">Pitching</span>
+                        </div>
+                        <div class="session-cards">
+                            <div class="session-card" data-type="panel">
+                                <div class="session-content">
+                                    <h4 class="session-title">Startup Pitches</h4>
+                                    <div class="session-info">
+                                        <i class="fas fa-map-marker-alt"></i>
+                                        <span>Auditorium</span>
+                                    </div>
+                                    <div class="session-tags">
+                                        <span class="session-tag">Pitching</span>
+                                        <span class="session-tag">Competition</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="time-slot">
+                        <div class="time-header">
+                            <h3>14:00 - 16:00</h3>
+                            <span class="time-badge">Closing</span>
+                        </div>
+                        <div class="session-cards">
+                            <div class="session-card featured" data-type="keynote">
+                                <div class="session-content">
+                                    <h4 class="session-title">Closing Ceremony & Awards</h4>
+                                    <div class="session-info">
+                                        <i class="fas fa-map-marker-alt"></i>
+                                        <span>Main Hall</span>
+                                    </div>
+                                    <div class="session-tags">
+                                        <span class="session-tag">Keynote</span>
+                                        <span class="session-tag">Awards</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="download-btn">
+                <button class="print-btn" id="print-schedule">
+                    <i class="fas fa-print"></i> Print Schedule
+                </button>
+                <a href="#" class="btn-secondary" style="margin-left: 15px;">
+                    <i class="fas fa-download"></i> Download PDF
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <a href="index.html">
+                        <img src="https://via.placeholder.com/180x60?text=Summit+Logo" alt="Summit Logo">
+                    </a>
+                </div>
+                <div class="footer-links">
+                    <div class="footer-column">
+                        <h3>Quick Links</h3>
+                        <ul>
+                            <li><a href="about.html">About</a></li>
+                            <li><a href="conference.html">Conference</a></li>
+                            <li><a href="exhibition.html">Exhibition</a></li>
+                            <li><a href="investors.html">Investors</a></li>
+                            <li><a href="partnership.html">Partnership</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-column">
+                        <h3>Resources</h3>
+                        <ul>
+                            <li><a href="faq.html">FAQs</a></li>
+                            <li><a href="press.html">Press</a></li>
+                            <li><a href="gallery.html">Gallery</a></li>
+                            <li><a href="contact.html">Contact Us</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-column">
+                        <h3>Connect With Us</h3>
+                        <div class="social-icons">
+                            <a href="#"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#"><i class="fab fa-twitter"></i></a>
+                            <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                            <a href="#"><i class="fab fa-instagram"></i></a>
+                        </div>
+                        <div class="contact-info">
+                            <p><i class="fas fa-envelope"></i> info@startupsummit.com</p>
+                            <p><i class="fas fa-phone"></i> +1 (123) 456-7890</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Startup Summit. All Rights Reserved.</p>
+                <div class="footer-bottom-links">
+                    <a href="privacy.html">Privacy Policy</a>
+                    <a href="terms.html">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Back to Top Button -->
+    <a href="#" id="back-to-top" class="back-to-top">
+        <i class="fas fa-arrow-up"></i>
+    </a>
+
+    <!-- Page Transition Overlay -->
+    <div class="page-transition"></div>
+
+    <script src="script.js"></script>
+    <script>
+        // Schedule page specific JavaScript
+        document.addEventListener('DOMContentLoaded', function() {
+            // Day tabs functionality
+            const dayTabs = document.querySelectorAll('.day-tab');
+            const dayContents = document.querySelectorAll('.day-content');
+            
+            dayTabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    const dayId = tab.getAttribute('data-day');
+                    
+                    // Remove active class from all tabs and contents
+                    dayTabs.forEach(t => t.classList.remove('active'));
+                    dayContents.forEach(c => c.classList.remove('active'));
+                    
+                    // Add active class to selected tab and content
+                    tab.classList.add('active');
+                    document.getElementById(dayId).classList.add('active');
+                });
+            });
+            
+            // Filter functionality
+            const filterOptions = document.querySelectorAll('.filter-option');
+            const sessionCards = document.querySelectorAll('.session-card');
+            
+            filterOptions.forEach(option => {
+                option.addEventListener('click', () => {
+                    const filter = option.getAttribute('data-filter');
+                    
+                    // Remove active class from all options
+                    filterOptions.forEach(o => o.classList.remove('active'));
+                    
+                    // Add active class to selected option
+                    option.classList.add('active');
+                    
+                    // Filter session cards
+                    sessionCards.forEach(card => {
+                        if (filter === 'all' || card.getAttribute('data-type') === filter) {
+                            card.style.display = 'block';
+                        } else {
+                            card.style.display = 'none';
+                        }
+                    });
+                });
+            });
+            
+            // Print functionality
+            const printBtn = document.getElementById('print-schedule');
+            
+            printBtn.addEventListener('click', () => {
+                window.print();
+            });
+            
+            // Animate session cards on scroll
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach((entry, index) => {
+                    if (entry.isIntersecting) {
+                        setTimeout(() => {
+                            entry.target.style.opacity = '1';
+                            entry.target.style.transform = 'translateY(0)';
+                        }, index * 50);
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, {
+                threshold: 0.1
+            });
+            
+            sessionCards.forEach(card => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                observer.observe(card);
+            });
+        });
+    </script>
+</body>
+</html>
