@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Learn More - Startup Summit 2025</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Page-specific styles */
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+        
+        .feature-card {
+            background-color: #ffffff;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--box-shadow);
+            transition: transform 0.5s ease, box-shadow 0.5s ease;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        }
+        
+        .feature-icon {
+            height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--primary-color);
+            color: #ffffff;
+            font-size: 2.5rem;
+        }
+        
+        .feature-content {
+            padding: 20px;
+        }
+        
+        .feature-content h3 {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+            color: var(--primary-color);
+        }
+        
+        .feature-content p {
+            font-size: 0.95rem;
+            margin-bottom: 15px;
+        }
+        
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            margin: 50px 0;
+        }
+        
+        .stat-item {
+            text-align: center;
+            padding: 30px;
+            background-color: #ffffff;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            transition: transform 0.3s ease;
+        }
+        
+        .stat-item:hover {
+            transform: translateY(-5px);
+        }
+        
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--secondary-color);
+            margin-bottom: 10px;
+            line-height: 1;
+        }
+        
+        .stat-label {
+            font-size: 1.1rem;
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+        
+        .timeline {
+            position: relative;
+            max-width: 800px;
+            margin: 50px auto;
+        }
+        
+        .timeline::after {
+            content: '';
+            position: absolute;
+            width: 6px;
+            background-color: var(--primary-color);
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            margin-left: -3px;
+        }
+        
+        .timeline-item {
+            padding: 10px 40px;
+            position: relative;
+            width: 50%;
+            box-sizing: border-box;
+            margin-bottom: 30px;
+        }
+        
+        .timeline-item::after {
+            content: '';
+            position: absolute;
+            width: 25px;
+            height: 25px;
+            background-color: #ffffff;
+            border: 4px solid var(--secondary-color);
+            border-radius: 50%;
+            top: 15px;
+            z-index: 1;
+        }
+        
+        .timeline-item:nth-child(odd) {
+            left: 0;
+        }
+        
+        .timeline-item:nth-child(even) {
+            left: 50%;
+        }
+        
+        .timeline-item:nth-child(odd)::after {
+            right: -17px;
+        }
+        
+        .timeline-item:nth-child(even)::after {
+            left: -17px;
+        }
+        
+        .timeline-content {
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+        }
+        
+        .timeline-content h3 {
+            margin-top: 0;
+            color: var(--primary-color);
+        }
+        
+        .timeline-content .date {
+            color: var(--secondary-color);
+            font-weight: 600;
+            margin-bottom: 10px;
+            display: block;
+        }
+        
+        @media screen and (max-width: 768px) {
+            .timeline::after {
+                left: 31px;
+            }
+            
+            .timeline-item {
+                width: 100%;
+                padding-left: 70px;
+                padding-right: 25px;
+            }
+            
+            .timeline-item:nth-child(even) {
+                left: 0;
+            }
+            
+            .timeline-item:nth-child(odd)::after,
+            .timeline-item:nth-child(even)::after {
+                left: 15px;
+            }
+        }
+        
+        .counter {
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Section -->
+    <header id="header">
+        <div class="container">
+            <div class="logo">
+                <a href="index.html">
+                    <img src="https://via.placeholder.com/240x80?text=Summit+Logo" alt="Summit Logo">
+                </a>
+                <div class="event-details">
+                    <p>April 3-5, 2025 · Innovation Center, New City</p>
+                </div>
+            </div>
+            <nav>
+                <ul class="nav-menu">
+                    <li class="dropdown">
+                        <a href="about.html">About <i class="fas fa-chevron-down"></i></a>
+                        <div class="dropdown-content">
+                            <a href="about-event.html">About Event</a>
+                            <a href="mission.html">Our Mission</a>
+                            <a href="vision.html">Vision</a>
+                        </div>
+                    </li>
+                    <li class="dropdown">
+                        <a href="conference.html">Conference <i class="fas fa-chevron-down"></i></a>
+                        <div class="dropdown-content">
+                            <a href="agenda.html">Agenda</a>
+                            <a href="speakers.html">Speakers</a>
+                            <a href="workshops.html">Workshops</a>
+                        </div>
+                    </li>
+                    <li class="dropdown">
+                        <a href="exhibition.html">Exhibition <i class="fas fa-chevron-down"></i></a>
+                        <div class="dropdown-content">
+                            <a href="startups.html">Startups</a>
+                            <a href="innovation.html">Innovation Zone</a>
+                            <a href="showcase.html">Showcase</a>
+                        </div>
+                    </li>
+                    <li><a href="investors.html">Investors</a></li>
+                    <li class="dropdown">
+                        <a href="partnership.html">Partnership <i class="fas fa-chevron-down"></i></a>
+                        <div class="dropdown-content">
+                            <a href="sponsors.html">Sponsors</a>
+                            <a href="partners.html">Partners</a>
+                            <a href="opportunities.html">Opportunities</a>
+                        </div>
+                    </li>
+                    <li class="dropdown">
+                        <a href="programs.html">Special Programmes <i class="fas fa-chevron-down"></i></a>
+                        <div class="dropdown-content">
+                            <a href="hackathon.html">Hackathon</a>
+                            <a href="pitching.html">Pitching Competition</a>
+                            <a href="mentorship.html">Mentorship</a>
+                        </div>
+                    </li>
+                </ul>
+            </nav>
+            <div class="register-btn">
+                <a href="register.html" class="btn-primary">Register Now</a>
+            </div>
+            <div class="mobile-menu-btn">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </header>
+
+    <!-- Page Header -->
+    <section class="page-header">
+        <div class="container">
+            <div class="page-header-content">
+                <h1>Learn More About the Summit</h1>
+                <div class="breadcrumbs">
+                    <a href="index.html">Home</a>
+                    <span class="separator">/</span>
+                    <span class="current">Learn More</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Event Section -->
+    <section class="section">
+        <div class="container">
+            <div class="section-header">
+                <h2>About Startup Summit 2025</h2>
+                <div class="underline"></div>
+            </div>
+            
+            <div class="about-content">
+                <div class="about-text">
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam in dui mauris. Vivamus hendrerit arcu sed erat molestie vehicula. Sed auctor neque eu tellus rhoncus ut eleifend nibh porttitor. Ut in nulla enim. Phasellus molestie magna non est bibendum non venenatis nisl tempor.</p>
+                    
+                    <p>Suspendisse dictum feugiat nisl ut dapibus. Mauris iaculis porttitor posuere. Praesent id metus massa, ut blandit odio. Proin quis tortor orci. Etiam at risus et justo dignissim congue. Donec congue lacinia dui, a porttitor lectus condimentum laoreet.</p>
+                    
+                    <p>Nunc eu ullamcorper orci. Quisque eget odio ac lectus vestibulum faucibus eget in metus. In pellentesque faucibus vestibulum. Nulla at nulla justo, eget luctus tortor. Nulla facilisi. Duis aliquet egestas purus in blandit.</p>
+                </div>
+                <div class="about-image">
+                    <img src="https://via.placeholder.com/500x300?text=About+The+Summit" alt="About The Summit">
+                </div>
+            </div>
+            
+            <!-- Stats Section -->
+            <div class="stats-container">
+                <div class="stat-item">
+                    <div class="stat-number"><span class="counter" data-target="5000">0</span>+</div>
+                    <div class="stat-label">Attendees</div>
+                </div>
+                
+                <div class="stat-item">
+                    <div class="stat-number"><span class="counter" data-target="150">0</span>+</div>
+                    <div class="stat-label">Speakers</div>
+                </div>
+                
+                <div class="stat-item">
+                    <div class="stat-number"><span class="counter" data-target="300">0</span>+</div>
+                    <div class="stat-label">Startups</div>
+                </div>
+                
+                <div class="stat-item">
+                    <div class="stat-number"><span class="counter" data-target="50">0</span>+</div>
+                    <div class="stat-label">Countries</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="section bg-light">
+        <div class="container">
+            <div class="section-header">
+                <h2>Why Attend</h2>
+                <div class="underline"></div>
+            </div>
+            
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="feature-content">
+                        <h3>Networking Opportunities</h3>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam in dui mauris. Vivamus hendrerit arcu sed erat molestie vehicula.</p>
+                    </div>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-lightbulb"></i>
+                    </div>
+                    <div class="feature-content">
+                        <h3>Innovative Ideas</h3>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam in dui mauris. Vivamus hendrerit arcu sed erat molestie vehicula.</p>
+                    </div>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-handshake"></i>
+                    </div>
+                    <div class="feature-content">
+                        <h3>Investment Opportunities</h3>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam in dui mauris. Vivamus hendrerit arcu sed erat molestie vehicula.</p>
+                    </div>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-chalkboard-teacher"></i>
+                    </div>
+                    <div class="feature-content">
+                        <h3>Expert Workshops</h3>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam in dui mauris. Vivamus hendrerit arcu sed erat molestie vehicula.</p>
+                    </div>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-rocket"></i>
+                    </div>
+                    <div class="feature-content">
+                        <h3>Startup Showcase</h3>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam in dui mauris. Vivamus hendrerit arcu sed erat molestie vehicula.</p>
+                    </div>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-globe"></i>
+                    </div>
+                    <div class="feature-content">
+                        <h3>Global Connections</h3>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam in dui mauris. Vivamus hendrerit arcu sed erat molestie vehicula.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Timeline Section -->
+    <section class="section">
+        <div class="container">
+            <div class="section-header">
+                <h2>Event Timeline</h2>
+                <div class="underline"></div>
+            </div>
+            
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <span class="date">January 15, 2025</span>
+                        <h3>Registration Opens</h3>
+                        <p>Early bird registration begins with special discounted rates.</p>
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <span class="date">February 28, 2025</span>
+                        <h3>Speaker Submission Deadline</h3>
+                        <p>Last day to submit speaker proposals for the conference.</p>
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <span class="date">March 10, 2025</span>
+                        <h3>Startup Application Deadline</h3>
+                        <p>Final day for startups to apply for the showcase and pitching competition.</p>
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <span class="date">March 20, 2025</span>
+                        <h3>Agenda Announcement</h3>
+                        <p>Full conference agenda and speaker lineup announced.</p>
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <span class="date">April 2, 2025</span>
+                        <h3>Pre-Event Networking</h3>
+                        <p>VIP reception and pre-event networking for speakers and sponsors.</p>
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <span class="date">April 3-5, 2025</span>
+                        <h3>Startup Summit 2025</h3>
+                        <p>The main event with keynotes, panels, workshops, and networking.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Call to Action -->
+    <section class="section bg-dark">
+        <div class="container">
+            <div class="cta-content">
+                <h2>Ready to Join the Innovation Journey?</h2>
+                <p>Secure your spot at the largest startup summit of 2025</p>
+                <a href="register.html" class="btn-primary">Register Now</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <a href="index.html">
+                        <img src="https://via.placeholder.com/180x60?text=Summit+Logo" alt="Summit Logo">
+                    </a>
+                </div>
+                <div class="footer-links">
+                    <div class="footer-column">
+                        <h3>Quick Links</h3>
+                        <ul>
+                            <li><a href="about.html">About</a></li>
+                            <li><a href="conference.html">Conference</a></li>
+                            <li><a href="exhibition.html">Exhibition</a></li>
+                            <li><a href="investors.html">Investors</a></li>
+                            <li><a href="partnership.html">Partnership</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-column">
+                        <h3>Resources</h3>
+                        <ul>
+                            <li><a href="faq.html">FAQs</a></li>
+                            <li><a href="press.html">Press</a></li>
+                            <li><a href="gallery.html">Gallery</a></li>
+                            <li><a href="contact.html">Contact Us</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-column">
+                        <h3>Connect With Us</h3>
+                        <div class="social-icons">
+                            <a href="#"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#"><i class="fab fa-twitter"></i></a>
+                            <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                            <a href="#"><i class="fab fa-instagram"></i></a>
+                        </div>
+                        <div class="contact-info">
+                            <p><i class="fas fa-envelope"></i> info@startupsummit.com</p>
+                            <p><i class="fas fa-phone"></i> +1 (123) 456-7890</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Startup Summit. All Rights Reserved.</p>
+                <div class="footer-bottom-links">
+                    <a href="privacy.html">Privacy Policy</a>
+                    <a href="terms.html">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Back to Top Button -->
+    <a href="#" id="back-to-top" class="back-to-top">
+        <i class="fas fa-arrow-up"></i>
+    </a>
+
+    <!-- Page Transition Overlay -->
+    <div class="page-transition"></div>
+
+    <script src="script.js"></script>
+    <script>
+        // Learn More page specific JavaScript
+        document.addEventListener('DOMContentLoaded', function() {
+            // Counter animation
+            const counters = document.querySelectorAll('.counter');
+            const speed = 200; // The lower the slower
+            
+            counters.forEach(counter => {
+                const updateCount = () => {
+                    const target = +counter.getAttribute('data-target');
+                    const count = +counter.innerText;
+                    
+                    // Lower inc to slow and higher to speed up
+                    const inc = target / speed;
+                    
+                    // Check if target is reached
+                    if (count < target) {
+                        // Add inc to count and output in counter
+                        counter.innerText = Math.ceil(count + inc);
+                        // Call function every ms
+                        setTimeout(updateCount, 1);
+                    } else {
+                        counter.innerText = target;
+                    }
+                };
+                
+                updateCount();
+            });
+            
+            // Animate feature cards on scroll
+            const featureCards = document.querySelectorAll('.feature-card');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach((entry, index) => {
+                    if (entry.isIntersecting) {
+                        setTimeout(() => {
+                            entry.target.style.opacity = '1';
+                            entry.target.style.transform = 'translateY(0)';
+                        }, index * 100);
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, {
+                threshold: 0.1
+            });
+            
+            featureCards.forEach(card => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                observer.observe(card);
+            });
+            
+            // Animate timeline items on scroll
+            const timelineItems = document.querySelectorAll('.timeline-item');
+            
+            const timelineObserver = new IntersectionObserver((entries) => {
+                entries.forEach((entry, index) => {
+                    if (entry.isIntersecting) {
+                        setTimeout(() => {
+                            entry.target.style.opacity = '1';
+                            entry.target.style.transform = entry.target.classList.contains('left') ? 'translateX(0)' : 'translateX(0)';
+                        }, index * 200);
+                        timelineObserver.unobserve(entry.target);
+                    }
+                });
+            }, {
+                threshold: 0.1
+            });
+            
+            timelineItems.forEach((item, index) => {
+                item.style.opacity = '0';
+                item.style.transform = index % 2 === 0 ? 'translateX(-50px)' : 'translateX(50px)';
+                item.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                item.classList.add(index % 2 === 0 ? 'left' : 'right');
+                timelineObserver.observe(item);
+            });
+        });
+    </script>
+</body>
+</html>
