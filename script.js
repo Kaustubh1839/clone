@@ -5,16 +5,17 @@ const navMenu = document.querySelector('.nav-menu');
 const backToTopBtn = document.getElementById('back-to-top');
 const tabBtns = document.querySelectorAll('.tab-btn');
 const tabPanes = document.querySelectorAll('.tab-pane');
-const registerModal = document.getElementById('register-modal');
-const closeModalBtn = document.querySelector('.close-modal');
-const registerBtns = document.querySelectorAll('a[href="#register"]');
-const registerForm = document.getElementById('register-form');
+const registerBtns = document.querySelectorAll('a[href="register.html"]');
 const dropdowns = document.querySelectorAll('.dropdown');
+const pageTransition = document.querySelector('.page-transition');
 
 // Event Listeners
 document.addEventListener('DOMContentLoaded', function() {
     // Initialize the page
     initApp();
+    
+    // Add page transition for all links
+    addPageTransitions();
 });
 
 // Scroll event for sticky header and back to top button
@@ -36,29 +37,6 @@ tabBtns.forEach(btn => {
     });
 });
 
-// Register modal
-registerBtns.forEach(btn => {
-    btn.addEventListener('click', function(e) {
-        e.preventDefault();
-        openRegisterModal();
-    });
-});
-
-closeModalBtn.addEventListener('click', closeRegisterModal);
-
-// Close modal when clicking outside
-window.addEventListener('click', function(e) {
-    if (e.target === registerModal) {
-        closeRegisterModal();
-    }
-});
-
-// Register form submission
-registerForm.addEventListener('submit', function(e) {
-    e.preventDefault();
-    handleFormSubmission();
-});
-
 // Back to top button
 backToTopBtn.addEventListener('click', function(e) {
     e.preventDefault();
@@ -70,8 +48,10 @@ if (window.innerWidth <= 1024) {
     dropdowns.forEach(dropdown => {
         const dropdownLink = dropdown.querySelector('a');
         dropdownLink.addEventListener('click', function(e) {
-            e.preventDefault();
-            dropdown.classList.toggle('active');
+            if (window.innerWidth <= 1024) {
+                e.preventDefault();
+                dropdown.classList.toggle('active');
+            }
         });
     });
 }
@@ -87,6 +67,9 @@ function initApp() {
     
     // Initialize animations
     initAnimations();
+    
+    // Initialize schedule tabs
+    initScheduleTabs();
 }
 
 function toggleStickyHeader() {
@@ -119,6 +102,14 @@ function toggleMobileMenu() {
     }
 }
 
+function initScheduleTabs() {
+    // Make sure the first tab is active by default
+    if (tabBtns.length > 0 && tabPanes.length > 0) {
+        const firstTabId = tabBtns[0].getAttribute('data-tab');
+        switchTab(firstTabId);
+    }
+}
+
 function switchTab(tabId) {
     // Remove active class from all tabs
     tabBtns.forEach(btn => {
@@ -130,38 +121,28 @@ function switchTab(tabId) {
     });
     
     // Add active class to selected tab
-    document.querySelector(`.tab-btn[data-tab="${tabId}"]`).classList.add('active');
-    document.getElementById(tabId).classList.add('active');
-}
-
-function openRegisterModal() {
-    registerModal.classList.add('active');
-    document.body.style.overflow = 'hidden'; // Prevent scrolling
-}
-
-function closeRegisterModal() {
-    registerModal.classList.remove('active');
-    document.body.style.overflow = ''; // Enable scrolling
-}
-
-function handleFormSubmission() {
-    // Get form data
-    const formData = new FormData(registerForm);
-    const formDataObj = {};
+    const selectedBtn = document.querySelector(`.tab-btn[data-tab="${tabId}"]`);
+    const selectedPane = document.getElementById(tabId);
     
-    formData.forEach((value, key) => {
-        formDataObj[key] = value;
-    });
-    
-    // Simulate form submission
-    console.log('Form submitted:', formDataObj);
-    
-    // Show success message
-    alert('Registration successful! Thank you for registering.');
-    
-    // Close modal and reset form
-    closeRegisterModal();
-    registerForm.reset();
+    if (selectedBtn && selectedPane) {
+        // First hide all panes
+        tabPanes.forEach(pane => {
+            pane.style.display = 'none';
+            pane.classList.remove('active');
+        });
+        
+        // Add active class to button immediately
+        selectedBtn.classList.add('active');
+        
+        // Show the selected pane with animation
+        selectedPane.style.display = 'block';
+        
+        // Trigger reflow
+        void selectedPane.offsetWidth;
+        
+        // Add active class for animation
+        selectedPane.classList.add('active');
+    }
 }
 
 function scrollToTop() {
@@ -184,8 +165,6 @@ function addSmoothScrolling() {
             e.preventDefault();
             
             const targetId = this.getAttribute('href');
-            if (targetId === '#register') return; // Skip register links
-            
             const targetElement = document.querySelector(targetId);
             
             if (targetElement) {
@@ -209,9 +188,40 @@ function addSmoothScrolling() {
     });
 }
 
+function addPageTransitions() {
+    // Add transition for all links that point to other pages
+    const links = document.querySelectorAll('a:not([href^="#"]):not([href^="javascript:"])');
+    
+    links.forEach(link => {
+        // Skip links that open in new tabs or have download attribute
+        if (link.getAttribute('target') === '_blank' || link.hasAttribute('download')) {
+            return;
+        }
+        
+        link.addEventListener('click', function(e) {
+            const href = this.getAttribute('href');
+            
+            // Skip if it's an external link
+            if (href.indexOf('http') === 0 || href === '#') {
+                return;
+            }
+            
+            e.preventDefault();
+            
+            // Show transition
+            pageTransition.classList.add('active');
+            
+            // Navigate to the new page after transition
+            setTimeout(() => {
+                window.location.href = href;
+            }, 500);
+        });
+    });
+}
+
 function initAnimations() {
     // Add animation classes to elements when they come into view
-    const animatedElements = document.querySelectorAll('.section-header, .about-content, .speaker-card, .schedule-item, .sponsor-category, .cta-content');
+    const animatedElements = document.querySelectorAll('.section-header, .about-content, .speaker-card, .schedule-item, .sponsor-category, .cta-content, .quick-link-card');
     
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
@@ -234,6 +244,11 @@ document.head.insertAdjacentHTML('beforeend', `
 <style>
     /* Animations */
     @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+    
+    @keyframes fadeInUp {
         from { opacity: 0; transform: translateY(20px); }
         to { opacity: 1; transform: translateY(0); }
     }
@@ -254,7 +269,7 @@ document.head.insertAdjacentHTML('beforeend', `
     }
     
     .section-header.animate h2 {
-        animation: fadeIn 0.8s ease forwards;
+        animation: fadeInUp 0.8s ease forwards;
     }
     
     .section-header.animate .underline {
@@ -270,19 +285,44 @@ document.head.insertAdjacentHTML('beforeend', `
     }
     
     .speaker-card.animate {
-        animation: fadeIn 0.8s ease forwards;
+        animation: fadeInUp 0.8s ease forwards;
     }
     
     .schedule-item.animate {
-        animation: fadeIn 0.8s ease forwards;
+        animation: fadeInUp 0.8s ease forwards;
     }
     
     .sponsor-category.animate {
-        animation: fadeIn 0.8s ease forwards;
+        animation: fadeInUp 0.8s ease forwards;
     }
     
     .cta-content.animate {
         animation: scaleIn 0.8s ease forwards;
     }
+    
+    .quick-link-card.animate {
+        animation: fadeInUp 0.8s ease forwards;
+    }
+    
+    /* Staggered animations for grid items */
+    .speakers-grid .speaker-card:nth-child(1).animate { animation-delay: 0.1s; }
+    .speakers-grid .speaker-card:nth-child(2).animate { animation-delay: 0.2s; }
+    .speakers-grid .speaker-card:nth-child(3).animate { animation-delay: 0.3s; }
+    .speakers-grid .speaker-card:nth-child(4).animate { animation-delay: 0.4s; }
+    
+    .sponsors-grid .sponsor-logo:nth-child(1).animate { animation-delay: 0.1s; }
+    .sponsors-grid .sponsor-logo:nth-child(2).animate { animation-delay: 0.2s; }
+    .sponsors-grid .sponsor-logo:nth-child(3).animate { animation-delay: 0.3s; }
+    .sponsors-grid .sponsor-logo:nth-child(4).animate { animation-delay: 0.4s; }
 </style>
 `);
+
+// Check if this is a page load (not a refresh)
+if (performance.navigation.type !== 1) {
+    // Add initial page load animation
+    document.body.style.opacity = '0';
+    window.addEventListener('load', function() {
+        document.body.style.transition = 'opacity 0.5s ease';
+        document.body.style.opacity = '1';
+    });
+}
